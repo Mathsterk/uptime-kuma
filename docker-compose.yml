@@ -1,0 +1,7 @@
+version: "3"
+services:
+  uptime-kuma:
+    build: .
+    stdin_open: true
+    tty: true
+    entrypoint: /bin/bash
