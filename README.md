@@ -1,2 +1,5 @@
-# uptime-kuma
- Builds a container with uptime-kuma
+# uptime-kuma container
+ Builds an [uptime-kuma](https://github.com/louislam/uptime-kuma) container with the latest from the master branch
+
+### Why?
+The original repo does not have any bleeding edge container images, so i decided to build them myself
