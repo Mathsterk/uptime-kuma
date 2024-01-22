@@ -1,4 +1,4 @@
-name: Check upstream for changes
+name: "Check upstream for changes"
 
 on:
   schedule:
