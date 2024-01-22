@@ -45,14 +45,14 @@ jobs:
         id: upstream
         run: |
           echo MAIN=$(cat main/.last-upstream-commit) >> $GITHUB_ENV
-          echo MAIN=$(cat main/.last-upstream-commit) >> $GITHUB_OUTPUTS
+          echo MAIN=$(cat main/.last-upstream-commit) >> $GITHUB_OUTPUT
 
       - name: Retrieve HEAD commit of upstream
         id: main
         run: |
           echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_ENV
-          echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_OUTPUTS
-          echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_OUTPUTS
+          echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_OUTPUT
+          echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_OUTPUT
 
       - name: Make file with last commit
         if: ${{ env.MAIN != env.UPSTREAM }}
