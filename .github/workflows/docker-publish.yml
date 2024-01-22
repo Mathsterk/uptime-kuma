@@ -25,6 +25,10 @@ jobs:
   check-changes:
     name: Checks for changes in upstream repo
     runs-on: ubuntu-latest
+    outputs:
+      UPSTREAM_SHORT: ${{ steps.upstream.outputs.UPSTREAM_SHORT }}
+      UPSTREAM: ${{ steps.upstream.outputs.UPSTREAM }}
+      MAIN: ${{ steps.main.outputs.MAIN }}
     steps:
       - name: Checkout current repo
         uses: actions/checkout@v4
@@ -38,13 +42,17 @@ jobs:
           path: upstream
 
       - name: Retrieve last commit
+        id: upstream
         run: |
           echo MAIN=$(main/.last-upstream-commit) >> $GITHUB_ENV
+          echo MAIN=$(main/.last-upstream-commit) >> $GITHUB_OUTPUTS
 
       - name: Retrieve HEAD commit of upstream
+        id: main
         run: |
           echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_ENV
-          echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_ENV
+          echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_OUTPUTS
+          echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_OUTPUTS
 
       - name: Make file with last commit
         if: ${{ env.MAIN != env.UPSTREAM }}
@@ -62,6 +70,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-changes
     if: ${{ env.MAIN != env.UPSTREAM || contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name) }}
+    env:
+      UPSTREAM_SHORT: ${{needs.check-changes.outputs.UPSTREAM_SHORT}}
+      UPSTREAM: ${{needs.check-changes.outputs.UPSTREAM}}
+      MAIN: ${{needs.check-changes.outputs.MAIN}}
     permissions:
       contents: read
       packages: write
