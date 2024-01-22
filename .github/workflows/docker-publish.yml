@@ -53,6 +53,7 @@ jobs:
           echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_ENV
           echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_OUTPUT
           echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_OUTPUT
+          echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_ENV
 
       - name: Make file with last commit
         if: ${{ env.MAIN != env.UPSTREAM }}
