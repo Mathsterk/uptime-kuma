@@ -31,7 +31,7 @@ jobs:
       - name: Make file with last commit
         if: env.MAIN != env.UPSTREAM
         run: |
-          echo $UPSTREAM > .last-upstream-commit
+          echo $UPSTREAM > main/.last-upstream-commit
 
       - name: Make PR
         uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38
