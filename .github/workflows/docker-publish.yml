@@ -44,6 +44,8 @@ jobs:
       - name: Retrieve last commit
         id: upstream
         run: |
+          ls -la main
+          ls -la main/.last-upstream-commit
           echo MAIN=$(main/.last-upstream-commit) >> $GITHUB_ENV
           echo MAIN=$(main/.last-upstream-commit) >> $GITHUB_OUTPUTS
 
