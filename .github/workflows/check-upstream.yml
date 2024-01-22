@@ -38,4 +38,4 @@ jobs:
         if: env.MAIN != env.UPSTREAM
         with:
           path: main
-          title: env.UPSTREAM
+          title: ${{ env.UPSTREAM }}
