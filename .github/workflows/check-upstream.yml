@@ -27,6 +27,7 @@ jobs:
       - name: Retrieve HEAD commit of upstream
         run: |
           echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_ENV
+          echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_ENV
 
       - name: Make file with last commit
         if: env.MAIN != env.UPSTREAM
@@ -38,4 +39,4 @@ jobs:
         if: env.MAIN != env.UPSTREAM
         with:
           path: main
-          title: ${{ env.UPSTREAM }}
+          title: ${{ env.UPSTREAM_SHORT }}
