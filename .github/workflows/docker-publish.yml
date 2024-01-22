@@ -1,4 +1,4 @@
-name: Docker
+name: Build docker image
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -10,10 +10,9 @@ on:
     - cron: '43 19 * * *'
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "main" ]
+    paths:
+      - 'Dockerfile'
+  workflow_dispatch:
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -23,9 +22,46 @@ env:
 
 
 jobs:
-  build:
-
+  check-changes:
+    name: Checks for changes in upstream repo
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Checkout upstream
+        uses: actions/checkout@v4
+        with:
+          repository: louislam/uptime-kuma
+          path: upstream
+
+      - name: Retrieve last commit
+        run: |
+          echo MAIN=$(main/.last-upstream-commit) >> $GITHUB_ENV
+
+      - name: Retrieve HEAD commit of upstream
+        run: |
+          echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_ENV
+          echo UPSTREAM_SHORT=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_ENV
+
+      - name: Make file with last commit
+        if: env.MAIN != env.UPSTREAM
+        run: |
+          cd main
+          echo $UPSTREAM > .last-upstream-commit
+
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Upstream is: ${{ env.UPSTREAM_SHORT }}"
+          git push
+
+  build:
+    runs-on: ubuntu-latest
+    needs: check-changes
+    if: env.MAIN != env.UPSTREAM || contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name)
     permissions:
       contents: read
       packages: write
@@ -68,6 +104,8 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            sha-${{ ENV.UPSTREAM_SHORT }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
