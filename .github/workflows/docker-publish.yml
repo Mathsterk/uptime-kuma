@@ -46,12 +46,14 @@ jobs:
         run: |
           echo main=$(cat main/.last-upstream-commit) >> $GITHUB_ENV
           echo main=$(cat main/.last-upstream-commit) >> $GITHUB_OUTPUT
+          echo "Last upstream is: $(cat main/.last-upstream-commit)"
 
       - name: Retrieve HEAD commit of upstream
         id: main
         run: |
           echo upstream=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_ENV
           echo upstream=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_OUTPUT
+          echo "Upstream is: $(git -C upstream rev-parse --verify HEAD)"
           echo upstream_short=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_ENV
           echo upstream_short=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_OUTPUT
 
