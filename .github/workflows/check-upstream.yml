@@ -1,0 +1,46 @@
+name: Check upstream for changes
+
+on:
+  schedule:
+    - cron: '43 17 * * *'
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Checkout upstream
+        uses: actions/checkout@v4
+        with:
+          repository: louislam/uptime-kuma
+          path: upstream
+
+      - name: Retrieve last commit
+        run: |
+          echo MAIN=$(main/.last-upstream-commit) >> $GITHUB_ENV
+
+      - name: Retrieve HEAD commit of upstream
+        run: |
+          echo UPSTREAM=$(git -C upstream rev-parse --verify HEAD) >> $GITHUB_ENV
+
+      - name: Make PR if different
+        if: env.MAIN != env.UPSTREAM
+        run: |
+          echo $UPSTREAM > .last-upstream-commit
+          cd main
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout -b $(date +%s)
+          git add .
+          git commit -m "generated"
+          git push
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38
+        with:
+          path: main
+          title: env.UPSTREAM
