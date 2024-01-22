@@ -3,7 +3,7 @@ name: "Check upstream for changes"
 on:
   schedule:
     - cron: '43 17 * * *'
-  workflow_dispath: {}
+  workflow_dispath:
 
 jobs:
   check-changes:
