@@ -78,6 +78,7 @@ jobs:
     if: ${{ (needs.check-changes.outputs.upstream != needs.check-changes.outputs.main && needs.check-changes.outputs.upstream != null) || contains(fromJSON('["push", "workflow_dispatch"]'), github.event_name) }}
     env:
       upstream_short: ${{needs.check-changes.outputs.upstream_short}}
+      upstream_timestamp: ${{needs.check-changes.outputs.upstream_timestamp}}
     permissions:
       contents: read
       packages: write
