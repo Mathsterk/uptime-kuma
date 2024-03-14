@@ -57,8 +57,8 @@ jobs:
           echo "Upstream is: $(git -C upstream rev-parse --verify HEAD)"
           echo upstream_short=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_ENV
           echo upstream_short=$(git -C upstream rev-parse --short --verify HEAD) >> $GITHUB_OUTPUT
-          echo upstream_timestamp=$(git log -1 --format="%at" | xargs -I{} date -d @{} +%Y/%m/%d_%H:%M:%S) >> $GITHUB_ENV
-          echo upstream_timestamp=$(git log -1 --format="%at" | xargs -I{} date -d @{} +%Y/%m/%d_%H:%M:%S) >> $GITHUB_OUTPUT
+          echo upstream_timestamp=$(git -C upstream log -1 --format="%at" | xargs -I{} date -d @{} +%Y/%m/%d_%H:%M:%S) >> $GITHUB_ENV
+          echo upstream_timestamp=$(git -C upstream log -1 --format="%at" | xargs -I{} date -d @{} +%Y/%m/%d_%H:%M:%S) >> $GITHUB_OUTPUT
 
       - name: Make file with last commit
         if: ${{ env.main != env.upstream }}
