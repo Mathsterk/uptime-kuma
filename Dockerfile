@@ -41,6 +41,7 @@ USER node
 WORKDIR /app
 
 LABEL org.opencontainers.image.source="https://github.com/louislam/uptime-kuma"
+LABEL org.opencontainers.image.description="A containerized uptime-kuma"
 
 ENV UPTIME_KUMA_IS_CONTAINER=1
 
